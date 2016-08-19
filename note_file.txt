@@ -1,6 +1,6 @@
 Note Title : Introduction
 
-Note Content : This is the intro of this app.
+Note Content : This is the intro. of this app.
 This is made for practicing purpose.
 Don't contain double shifter in your note or the system will probably crash next time you run it.
 
