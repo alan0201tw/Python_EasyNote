@@ -70,7 +70,7 @@ class Easy_Note (QWidget):
         for note_ in self.notelist :
             file.write("Note Title : " + note_.note_title)
             file.write('\n\n')
-            file.write(note_.note_content)
+            file.write("Note Content : " + note_.note_content)
             file.write('\n\n')
 
     #controlling notes
