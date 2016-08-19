@@ -4,7 +4,7 @@ It's a little application I made using some free time , it's very simple but qui
 This application can't remember the notes after reboot , hope I'll add this feature in the future.
 
 How to use :
-try it yourself!
+try it yourself!!
 
 Caution : 
 Please don't let the note contain double "\n" , it'll cause bug when loading notes.
