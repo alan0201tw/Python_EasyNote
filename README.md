@@ -5,3 +5,8 @@ This application can't remember the notes after reboot , hope I'll add this feat
 
 How to use :
 try it yourself!
+
+Caution : 
+Please don't let the note contain double "\n" , it'll cause bug when loading notes.
+
+If you found any bug when using or you have any suggestions , please comment !
