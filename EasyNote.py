@@ -69,15 +69,15 @@ class Easy_Note (QWidget):
         file = open('note_file.txt' , 'w+')
         for note_ in self.notelist :
             file.write("Note Title : " + note_.note_title)
-            file.write('\n\n')
+            file.write('---DevisionForProgram---')
             file.write("Note Content : " + note_.note_content)
-            file.write('\n\n')
+            file.write('---DevisionForProgram---')
 
     def read_notes(self):
         try:
             file = open('note_file.txt' , 'r')
             content = file.read()
-            tmp_list = content.split("\n\n")
+            tmp_list = content.split("---DevisionForProgram---")
             #print tmp_list
             #print len(tmp_list)
             i = 0
