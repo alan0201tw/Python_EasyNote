@@ -1,6 +1,6 @@
 Note Title : Introduction
 
-Note Content : Note Content : This is the introduction of this python app.
+Note Content : This is the introduction of this python app.
 This is made for practicing purpose.
 Don't contain double shifter in your note or the system will probably crash next time you run it.
 
