@@ -68,9 +68,9 @@ class Easy_Note (QWidget):
     def write_file(self):
         file = open('note_file.txt' , 'w+')
         for note_ in self.notelist :
-            file.write("Note Title : " + note_.note_title)
+            file.write(note_.note_title)
             file.write('---DevisionForProgram---')
-            file.write("Note Content : " + note_.note_content)
+            file.write(note_.note_content)
             file.write('---DevisionForProgram---')
 
     def read_notes(self):
@@ -83,8 +83,8 @@ class Easy_Note (QWidget):
             i = 0
             while (i+1) < len(tmp_list) :
                 tmp_list[i] = tmp_list[i].decode('utf-8')
-                self.notelist.append(note(tmp_list[i].replace("Note Title : " , "") , tmp_list[i+1].replace("Note Content : " , "")))
-                self.record.addItem(QString(tmp_list[i].replace("Note Title : " , "")))
+                self.notelist.append(note(tmp_list[i], tmp_list[i+1]))
+                self.record.addItem(QString(tmp_list[i]))
                 i += 2
             #print "lalalalala"
             #print self.notelist[0].note_title
