@@ -82,6 +82,7 @@ class Easy_Note (QWidget):
             #print len(tmp_list)
             i = 0
             while (i+1) < len(tmp_list) :
+                tmp_list[i] = tmp_list[i].decode('utf-8')
                 self.notelist.append(note(tmp_list[i].replace("Note Title : " , "") , tmp_list[i+1].replace("Note Content : " , "")))
                 self.record.addItem(QString(tmp_list[i].replace("Note Title : " , "")))
                 i += 2
@@ -101,8 +102,10 @@ class Easy_Note (QWidget):
         self.record.takeItem(self.record.currentRow())
 
     def load_note(self):
-        self.title.setText(self.notelist[self.record.currentRow()].note_title)
-        self.input.setPlainText(self.notelist[self.record.currentRow()].note_content)
+        #add ".decode('utf-8')"
+        self.title.setText(self.notelist[self.record.currentRow()].note_title.decode('utf-8'))
+        #add ".decode('utf-8')"
+        self.input.setPlainText(self.notelist[self.record.currentRow()].note_content.decode('utf-8'))
 
     #tools
     def add_date(self):
@@ -121,6 +124,9 @@ class Easy_Note (QWidget):
 
 
 if __name__ == '__main__' :
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
     app = QApplication(sys.argv)
 
     obj = Easy_Note()
