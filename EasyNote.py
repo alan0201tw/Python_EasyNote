@@ -7,7 +7,17 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
-class note():
+#tools for developer
+def second_check_alert(message):
+    second_check = QMessageBox()
+    second_check.setIcon(QMessageBox.Question)
+    second_check.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    second_check.setWindowTitle("Second Check Message Box")
+    second_check.setText(message)
+    reply = second_check.exec_()
+    return reply
+
+class note:
     def __init__(self):
         self.title = ""
         self.content = ""
@@ -51,9 +61,11 @@ class Easy_Note (QWidget):
 
         #tool-bar part
         column3 = QHBoxLayout()
-        self.adddate = QPushButton("Add Date")
+        self.edit_tool_label = QLabel("Some Tools for Note Content :)")
+        column3.addWidget(self.edit_tool_label)
+        self.adddate = QPushButton("Add Today's Date")
         column3.addWidget(self.adddate)
-        self.addtime = QPushButton("Add Time")
+        self.addtime = QPushButton("Add Time (Now)")
         column3.addWidget(self.addtime)
 
         #last part
@@ -78,17 +90,14 @@ class Easy_Note (QWidget):
             file = open('note_file.txt' , 'r')
             content = file.read()
             tmp_list = content.split("---DevisionForProgram---")
-            #print tmp_list
-            #print len(tmp_list)
+
             i = 0
             while (i+1) < len(tmp_list) :
                 tmp_list[i] = tmp_list[i].decode('utf-8')
                 self.notelist.append(note(tmp_list[i], tmp_list[i+1]))
                 self.record.addItem(QString(tmp_list[i]))
                 i += 2
-            #print "lalalalala"
-            #print self.notelist[0].note_title
-            #print self.notelist[0].note_content
+
         except Exception , ex:
             print str(ex)
 
@@ -98,8 +107,10 @@ class Easy_Note (QWidget):
         self.record.addItem(QString(self.title.text()))
 
     def delete_note(self):
-        self.notelist.pop(self.record.currentRow())
-        self.record.takeItem(self.record.currentRow())
+        reply = second_check_alert("Do you really want to delete note : " + self.notelist[self.record.currentRow()].note_title.decode('utf-8') + "?" )
+        if reply == QMessageBox.Yes :
+            self.notelist.pop(self.record.currentRow())
+            self.record.takeItem(self.record.currentRow())
 
     def load_note(self):
         #add ".decode('utf-8')"
