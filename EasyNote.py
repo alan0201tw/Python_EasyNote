@@ -54,6 +54,7 @@ class Easy_Note (Custom_Frame):
         super(Easy_Note, self).__init__(parent)
         self.create_layout()
         self.create_connect()
+        self.read_notes()
         self.resize(600,450)
 
     def create_layout(self):
@@ -82,7 +83,7 @@ class Easy_Note (Custom_Frame):
         column2.addStretch(1)
         column2.addWidget(self.add)
 
-        #tool-bar part
+        #col3 , tool-bar part
         column3 = QHBoxLayout()
         self.edit_tool_label = QLabel("Some Tools for Note Content :)")
         column3.addWidget(self.edit_tool_label)
@@ -160,12 +161,12 @@ class Easy_Note (Custom_Frame):
 if __name__ == '__main__' :
     reload(sys)
     sys.setdefaultencoding('utf-8')
+
     app = QApplication(sys.argv)
 
     obj = Easy_Note()
     obj.show()
 
-    obj.read_notes()
     app.exec_()
 
     obj.write_file()
