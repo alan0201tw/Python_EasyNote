@@ -9,13 +9,18 @@ from PyQt4.QtWebKit import *
 
 #tools for developer
 def second_check_alert(message):
-    second_check = QMessageBox()
-    second_check.setIcon(QMessageBox.Question)
-    second_check.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    second_check.setWindowTitle("Second Check Message Box")
-    second_check.setText(message)
-    reply = second_check.exec_()
-    return reply
+    reply = None
+    try:
+        second_check = QMessageBox()
+        second_check.setIcon(QMessageBox.Question)
+        second_check.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        second_check.setWindowTitle("Second Check Message Box")
+        second_check.setText(message)
+        reply = second_check.exec_()
+    except Exception , ex:
+        print str(ex)
+    finally:
+        return reply
 
 class note:
     def __init__(self):
@@ -137,7 +142,6 @@ class Easy_Note (QWidget):
 if __name__ == '__main__' :
     reload(sys)
     sys.setdefaultencoding('utf-8')
-
     app = QApplication(sys.argv)
 
     obj = Easy_Note()
