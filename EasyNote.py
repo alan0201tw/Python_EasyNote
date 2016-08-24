@@ -31,7 +31,25 @@ class note:
         self.note_title = str(title)
         self.note_content = str(content)
 
-class Easy_Note (QWidget):
+class Custom_Frame(QFrame):
+    def __init__(self , parent = None):
+        super(Custom_Frame , self).__init__(parent)
+        self.custom_setting()
+
+    def custom_setting(self):
+        p = self.palette()
+        p.setColor(self.backgroundRole(), QColor(255, 102, 102))
+        self.setPalette(p)
+
+        self.setStyleSheet(
+            "QLabel {color:rgb(255,255,255) ; font-family: Courier }" +
+            "QPushButton {background-color: rgb(128, 0, 0); color:rgb(255,255,255) ; font-family: Courier }" +
+            "QListWidget{ background-color: rgb(128, 0, 0); color : rgb(255,255,255) ; font-family: Courier }" +
+            "QLineEdit { background-color: rgb(128, 0, 0); color : rgb(255,255,255) ; font-family: Courier }"  +
+            "QPlainTextEdit {background-color : rgb(128, 0, 0); color : rgb(255,255,255) ; font-family: Courier }"
+        );
+
+class Easy_Note (Custom_Frame):
     def __init__(self , parent = None):
         super(Easy_Note, self).__init__(parent)
         self.create_layout()
