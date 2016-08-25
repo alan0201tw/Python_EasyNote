@@ -54,11 +54,11 @@ class Custom_Frame(QFrame):
         self.setPalette(p)
 
         self.setStyleSheet(
-            "QLabel {color:rgb(255,255,255) ; font-family: Courier }" +
-            "QPushButton {background-color: rgb(128, 0, 0); color:rgb(255,255,255) ; font-family: Courier }" +
-            "QListWidget{ background-color: rgb(128, 0, 0); color : rgb(255,255,255) ; font-family: Courier }" +
-            "QLineEdit { background-color: rgb(128, 0, 0); color : rgb(255,255,255) ; font-family: Courier }"  +
-            "QPlainTextEdit {background-color : rgb(128, 0, 0); color : rgb(255,255,255) ; font-family: Courier }"
+            "QLabel {color:rgb(255,255,255)}" +
+            "QPushButton {background-color: rgb(128, 0, 0); color:rgb(255,255,255)}" +
+            "QListWidget{ background-color: rgb(128, 0, 0); color : rgb(255,255,255)}" +
+            "QLineEdit { background-color: rgb(128, 0, 0); color : rgb(255,255,255)}"  +
+            "QPlainTextEdit {background-color : rgb(128, 0, 0); color : rgb(255,255,255)}"
         );
 
 ################################################################################
@@ -74,7 +74,7 @@ class Easy_Note (Custom_Frame):
     def init_setting(self):
         try:
             self.setFixedSize(600,450) #size wont change
-            self.set_font_size()
+            self.set_font()
             self.setWindowIcon(QIcon("note_image.png"))
         except Exception , ex:
             alert_box(ex.message)
@@ -85,15 +85,18 @@ class Easy_Note (Custom_Frame):
         #col0 - settings
         self.font_size_label = QLabel("Font Size : ")
         self.font_size = QSlider(Qt.Horizontal)
-        self.font_size.setMinimum(8)
-        self.font_size.setMaximum(16)
-        self.font_size.setValue(9)
+        self.font_size.setMinimum(12)
+        self.font_size.setMaximum(24)
+        self.font_size.setValue(16)
         self.show_font_size = QLabel()
         column0 = QHBoxLayout()
         column0.addWidget(self.font_size_label)
         column0.addWidget(self.font_size)
         column0.addWidget(self.show_font_size)
         column0.addStretch(0.3)
+
+        self.font_style = QFontComboBox()
+        column0.addWidget(self.font_style)
 
         #col1
         self.record = QListWidget()
@@ -136,7 +139,7 @@ class Easy_Note (Custom_Frame):
 
         self.setWindowTitle("Easy Note")
         self.setLayout(lay)
-
+    #save / load files
     def write_file(self):
         try:
             file = open('note_file.txt' , 'w+')
@@ -146,7 +149,7 @@ class Easy_Note (Custom_Frame):
                 file.write(note_.note_content)
                 file.write('---DevisionForProgram---')
         except Exception , ex:
-            alert_box(ex.message)
+            alert_box(str(ex))
 
     def read_notes(self):
         try:
@@ -164,7 +167,7 @@ class Easy_Note (Custom_Frame):
         except Exception , ex:
             print str(ex)
 
-    #controlling notes
+#controlling notes##############################################################
     def add_note(self):
         self.notelist.append(note(self.title.text() , self.input.toPlainText()))
         self.record.addItem(QString(self.title.text()))
@@ -185,30 +188,36 @@ class Easy_Note (Custom_Frame):
         #add ".decode('utf-8')"
         self.input.setPlainText(self.notelist[self.record.currentRow()].note_content.decode('utf-8'))
 
-    #tools
+#TOOLS##########################################################################
     def add_date(self):
         self.input.appendPlainText(QString(str(datetime.date.today())))
 
     def add_time(self):
         self.input.appendPlainText(QString(str(datetime.datetime.now())))
 
-    #settings
-    def set_font_size(self):
+#settings#######################################################################
+    def set_font(self):
         #print self.font_size.value()
         self.show_font_size.setText(str(self.font_size.value()))
-        self.show_font_size.setFont(QFont('Courier' , self.font_size.value()))
         try:
+            font = QFont(self.font_style.currentFont())
+            font.setPixelSize(self.font_size.value())
+
             all_widgets = self.findChildren(QLabel)
             all_widgets += self.findChildren(QLineEdit)
             all_widgets += self.findChildren(QPlainTextEdit)
             all_widgets += self.findChildren(QListWidget)
             all_widgets += self.findChildren(QPushButton)
+
             for widget in all_widgets :
-                widget.setFont(QFont('Courier' , self.font_size.value()))
+                widget.setFont(font)
         except Exception , ex:
             alert_box(ex.message)
 
+#For developer##################################################################
     def create_connect(self):
+        #settings
+        self.font_style.currentFontChanged.connect(self.set_font)
         #notes
         self.add.clicked.connect(self.add_note)
         self.load.clicked.connect(self.load_note)
@@ -218,7 +227,10 @@ class Easy_Note (Custom_Frame):
         self.addtime.clicked.connect(self.add_time)
         self.adddate.clicked.connect(self.add_date)
         #font_size
-        self.font_size.valueChanged.connect(self.set_font_size)
+        self.font_size.valueChanged.connect(self.set_font)
+
+    def on_disable(self):
+        self.write_file()
 
 ################################################################################
 
@@ -233,4 +245,4 @@ if __name__ == '__main__' :
 
     app.exec_()
 
-    obj.write_file()
+    obj.on_disable()
