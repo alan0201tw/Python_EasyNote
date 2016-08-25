@@ -7,7 +7,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
-#tools for developer
+#tools for developer############################################################
+
 def second_check_alert(message):
     reply = None
     try:
@@ -55,8 +56,8 @@ class Custom_Frame(QFrame):
 
         self.setStyleSheet(
             "QLabel {color:rgb(255,255,255)}" +
-            "QPushButton {background-color: rgb(128, 0, 0); color:rgb(255,255,255)}" +
-            "QListWidget{ background-color: rgb(128, 0, 0); color : rgb(255,255,255)}" +
+            "QPushButton {background-color: rgb(90, 0, 0); color:rgb(255,255,255)}" +
+            "QListWidget{ background-color: rgb(150, 0, 0); color : rgb(255,255,255)}" +
             "QLineEdit { background-color: rgb(128, 0, 0); color : rgb(255,255,255)}"  +
             "QPlainTextEdit {background-color : rgb(128, 0, 0); color : rgb(255,255,255)}"
         );
@@ -139,7 +140,9 @@ class Easy_Note (Custom_Frame):
 
         self.setWindowTitle("Easy Note")
         self.setLayout(lay)
-    #save / load files
+
+#save / load files##############################################################
+
     def write_file(self):
         try:
             file = open('note_file.txt' , 'w+')
@@ -168,6 +171,7 @@ class Easy_Note (Custom_Frame):
             print str(ex)
 
 #controlling notes##############################################################
+
     def add_note(self):
         self.notelist.append(note(self.title.text() , self.input.toPlainText()))
         self.record.addItem(QString(self.title.text()))
@@ -189,6 +193,7 @@ class Easy_Note (Custom_Frame):
         self.input.setPlainText(self.notelist[self.record.currentRow()].note_content.decode('utf-8'))
 
 #TOOLS##########################################################################
+
     def add_date(self):
         self.input.appendPlainText(QString(str(datetime.date.today())))
 
@@ -196,6 +201,7 @@ class Easy_Note (Custom_Frame):
         self.input.appendPlainText(QString(str(datetime.datetime.now())))
 
 #settings#######################################################################
+
     def set_font(self):
         #print self.font_size.value()
         self.show_font_size.setText(str(self.font_size.value()))
@@ -215,6 +221,7 @@ class Easy_Note (Custom_Frame):
             alert_box(ex.message)
 
 #For developer##################################################################
+
     def create_connect(self):
         #settings
         self.font_style.currentFontChanged.connect(self.set_font)
