@@ -85,15 +85,13 @@ class Easy_Note (Custom_Frame):
 
         #col0 - settings
         self.font_size_label = QLabel("Font Size : ")
-        self.font_size = QSlider(Qt.Horizontal)
+        self.font_size = QSpinBox()
         self.font_size.setMinimum(12)
         self.font_size.setMaximum(24)
         self.font_size.setValue(16)
-        self.show_font_size = QLabel()
         column0 = QHBoxLayout()
         column0.addWidget(self.font_size_label)
         column0.addWidget(self.font_size)
-        column0.addWidget(self.show_font_size)
         column0.addStretch(0.3)
 
         self.font_style = QFontComboBox()
@@ -204,7 +202,6 @@ class Easy_Note (Custom_Frame):
 
     def set_font(self):
         #print self.font_size.value()
-        self.show_font_size.setText(str(self.font_size.value()))
         try:
             font = QFont(self.font_style.currentFont())
             font.setPixelSize(self.font_size.value())
@@ -225,6 +222,7 @@ class Easy_Note (Custom_Frame):
     def create_connect(self):
         #settings
         self.font_style.currentFontChanged.connect(self.set_font)
+        self.font_size.valueChanged.connect(self.set_font)
         #notes
         self.add.clicked.connect(self.add_note)
         self.load.clicked.connect(self.load_note)
@@ -233,8 +231,6 @@ class Easy_Note (Custom_Frame):
         #tool
         self.addtime.clicked.connect(self.add_time)
         self.adddate.clicked.connect(self.add_date)
-        #font_size
-        self.font_size.valueChanged.connect(self.set_font)
 
     def on_disable(self):
         self.write_file()
