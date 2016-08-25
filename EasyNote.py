@@ -73,8 +73,9 @@ class Easy_Note (Custom_Frame):
 
     def init_setting(self):
         try:
-            self.setFixedSize(600,450)
+            self.setFixedSize(600,450) #size wont change
             self.set_font_size()
+            self.setWindowIcon(QIcon("note_image.png"))
         except Exception , ex:
             alert_box(ex.message)
 
@@ -108,10 +109,12 @@ class Easy_Note (Custom_Frame):
         #col2
         self.load = QPushButton("Load")
         self.delete = QPushButton("Delete")
+        self.clear = QPushButton("Clear Note")
         self.add = QPushButton("Add")
         column2 = QHBoxLayout()
         column2.addWidget(self.load)
         column2.addWidget(self.delete)
+        column2.addWidget(self.clear)
         column2.addStretch(1)#add space
         column2.addWidget(self.add)
 
@@ -135,12 +138,15 @@ class Easy_Note (Custom_Frame):
         self.setLayout(lay)
 
     def write_file(self):
-        file = open('note_file.txt' , 'w+')
-        for note_ in self.notelist :
-            file.write(note_.note_title)
-            file.write('---DevisionForProgram---')
-            file.write(note_.note_content)
-            file.write('---DevisionForProgram---')
+        try:
+            file = open('note_file.txt' , 'w+')
+            for note_ in self.notelist :
+                file.write(note_.note_title)
+                file.write('---DevisionForProgram---')
+                file.write(note_.note_content)
+                file.write('---DevisionForProgram---')
+        except Exception , ex:
+            alert_box(ex.message)
 
     def read_notes(self):
         try:
@@ -168,6 +174,10 @@ class Easy_Note (Custom_Frame):
         if reply == QMessageBox.Yes :
             self.notelist.pop(self.record.currentRow())
             self.record.takeItem(self.record.currentRow())
+
+    def clear_note(self):
+        self.title.setText('')
+        self.input.setPlainText('')
 
     def load_note(self):
         #add ".decode('utf-8')"
@@ -199,9 +209,10 @@ class Easy_Note (Custom_Frame):
             alert_box(ex.message)
 
     def create_connect(self):
-        #notes s/l
+        #notes
         self.add.clicked.connect(self.add_note)
         self.load.clicked.connect(self.load_note)
+        self.clear.clicked.connect(self.clear_note)
         self.delete.clicked.connect(self.delete_note)
         #tool
         self.addtime.clicked.connect(self.add_time)
