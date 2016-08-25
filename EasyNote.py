@@ -18,9 +18,21 @@ def second_check_alert(message):
         second_check.setText(message)
         reply = second_check.exec_()
     except Exception , ex:
-        print str(ex)
+        alert_box(str(ex))
     finally:
         return reply
+
+def alert_box(message):
+    try:
+        box = QMessageBox()
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle("Alert Box by EasyNote")
+        box.setText(message)
+        reply = box.exec_()
+    except Exception , ex:
+        print str(ex)
+
+################################################################################
 
 class note:
     def __init__(self):
@@ -49,25 +61,45 @@ class Custom_Frame(QFrame):
             "QPlainTextEdit {background-color : rgb(128, 0, 0); color : rgb(255,255,255) ; font-family: Courier }"
         );
 
+################################################################################
+
 class Easy_Note (Custom_Frame):
     def __init__(self , parent = None):
         super(Easy_Note, self).__init__(parent)
         self.create_layout()
         self.create_connect()
         self.read_notes()
-        self.resize(600,450)
+        self.init_setting()
+
+    def init_setting(self):
+        try:
+            self.setFixedSize(600,450)
+            self.set_font_size()
+        except Exception , ex:
+            alert_box(ex.message)
 
     def create_layout(self):
         self.notelist = []
+
+        #col0 - settings
+        self.font_size_label = QLabel("Font Size : ")
+        self.font_size = QSlider(Qt.Horizontal)
+        self.font_size.setMinimum(8)
+        self.font_size.setMaximum(16)
+        self.font_size.setValue(9)
+        self.show_font_size = QLabel()
+        column0 = QHBoxLayout()
+        column0.addWidget(self.font_size_label)
+        column0.addWidget(self.font_size)
+        column0.addWidget(self.show_font_size)
+        column0.addStretch(0.3)
 
         #col1
         self.record = QListWidget()
         self.title = QLineEdit("Note Title")
         self.input = QPlainTextEdit("Note Content")
-
         column1 = QHBoxLayout()
         col1_row1 = QVBoxLayout()
-
         column1.addWidget(self.record)
         col1_row1.addWidget(self.title)
         col1_row1.addWidget(self.input)
@@ -80,7 +112,7 @@ class Easy_Note (Custom_Frame):
         column2 = QHBoxLayout()
         column2.addWidget(self.load)
         column2.addWidget(self.delete)
-        column2.addStretch(1)
+        column2.addStretch(1)#add space
         column2.addWidget(self.add)
 
         #col3 , tool-bar part
@@ -94,6 +126,7 @@ class Easy_Note (Custom_Frame):
 
         #last part
         lay = QVBoxLayout()
+        lay.addLayout(column0)
         lay.addLayout(column1)
         lay.addLayout(column2)
         lay.addLayout(column3)
@@ -149,14 +182,34 @@ class Easy_Note (Custom_Frame):
     def add_time(self):
         self.input.appendPlainText(QString(str(datetime.datetime.now())))
 
+    #settings
+    def set_font_size(self):
+        #print self.font_size.value()
+        self.show_font_size.setText(str(self.font_size.value()))
+        self.show_font_size.setFont(QFont('Courier' , self.font_size.value()))
+        try:
+            all_widgets = self.findChildren(QLabel)
+            all_widgets += self.findChildren(QLineEdit)
+            all_widgets += self.findChildren(QPlainTextEdit)
+            all_widgets += self.findChildren(QListWidget)
+            all_widgets += self.findChildren(QPushButton)
+            for widget in all_widgets :
+                widget.setFont(QFont('Courier' , self.font_size.value()))
+        except Exception , ex:
+            alert_box(ex.message)
+
     def create_connect(self):
+        #notes s/l
         self.add.clicked.connect(self.add_note)
         self.load.clicked.connect(self.load_note)
         self.delete.clicked.connect(self.delete_note)
-
+        #tool
         self.addtime.clicked.connect(self.add_time)
         self.adddate.clicked.connect(self.add_date)
+        #font_size
+        self.font_size.valueChanged.connect(self.set_font_size)
 
+################################################################################
 
 if __name__ == '__main__' :
     reload(sys)
