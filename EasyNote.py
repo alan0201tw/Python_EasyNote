@@ -89,13 +89,13 @@ class Easy_Note (Custom_Frame):
         self.font_size.setMinimum(12)
         self.font_size.setMaximum(24)
         self.font_size.setValue(16)
+        self.font_style = QFontComboBox()
+
         column0 = QHBoxLayout()
         column0.addWidget(self.font_size_label)
         column0.addWidget(self.font_size)
-        column0.addStretch(0.3)
-
-        self.font_style = QFontComboBox()
         column0.addWidget(self.font_style)
+        column0.addStretch(1)
 
         #col1
         self.record = QListWidget()
