@@ -9,15 +9,21 @@ from PyQt4.QtWebKit import *
 
 #tools for developer############################################################
 
+ask_again_state = Qt.Checked
+
 def second_check_alert(message):
     reply = None
     try:
-        second_check = QMessageBox()
-        second_check.setIcon(QMessageBox.Question)
-        second_check.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        second_check.setWindowTitle("Second Check Message Box")
-        second_check.setText(message)
-        reply = second_check.exec_()
+        global ask_again_state
+        if ask_again_state == Qt.Unchecked:
+            reply = QMessageBox.Yes
+        else:
+            second_check = QMessageBox()
+            second_check.setIcon(QMessageBox.Question)
+            second_check.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            second_check.setWindowTitle("Second Check Message Box")
+            second_check.setText(message)
+            reply = second_check.exec_()
     except Exception , ex:
         alert_box(str(ex))
     finally:
@@ -82,7 +88,6 @@ class Easy_Note (Custom_Frame):
 
     def create_layout(self):
         self.notelist = []
-
         #col0 - settings
         self.font_size_label = QLabel("Font Size : ")
         self.font_size = QSpinBox()
@@ -90,12 +95,15 @@ class Easy_Note (Custom_Frame):
         self.font_size.setMaximum(24)
         self.font_size.setValue(16)
         self.font_style = QFontComboBox()
+        self.ask_again = QCheckBox("Second Check")
+        self.ask_again.setCheckState(Qt.Checked)
 
         column0 = QHBoxLayout()
         column0.addWidget(self.font_size_label)
         column0.addWidget(self.font_size)
         column0.addWidget(self.font_style)
         column0.addStretch(1)
+        column0.addWidget(self.ask_again)
 
         #col1
         self.record = QListWidget()
@@ -113,11 +121,13 @@ class Easy_Note (Custom_Frame):
         self.delete = QPushButton("Delete")
         self.clear = QPushButton("Clear Note")
         self.add = QPushButton("Add")
+        self.replace = QPushButton("Replace")
         column2 = QHBoxLayout()
         column2.addWidget(self.load)
         column2.addWidget(self.delete)
         column2.addWidget(self.clear)
         column2.addStretch(1)#add space
+        column2.addWidget(self.replace)
         column2.addWidget(self.add)
 
         #col3 , tool-bar part
@@ -170,15 +180,32 @@ class Easy_Note (Custom_Frame):
 
 #controlling notes##############################################################
 
+    def replace_note(self):
+        act = QMessageBox.No
+        try:
+            if self.record.currentRow() >= 0 :
+                act = second_check_alert("Sure to replace?")
+        except Exception ,ex:
+            alert_box(str(ex))
+        finally:
+            if act == QMessageBox.Yes :
+                self.notelist.pop(self.record.currentRow())
+                self.record.takeItem(self.record.currentRow())
+                self.notelist.append(note(self.title.text() , self.input.toPlainText()))
+                self.record.addItem(QString(self.title.text()))
+
     def add_note(self):
         self.notelist.append(note(self.title.text() , self.input.toPlainText()))
         self.record.addItem(QString(self.title.text()))
 
     def delete_note(self):
-        reply = second_check_alert("Do you really want to delete note : " + self.notelist[self.record.currentRow()].note_title.decode('utf-8') + "?" )
-        if reply == QMessageBox.Yes :
-            self.notelist.pop(self.record.currentRow())
-            self.record.takeItem(self.record.currentRow())
+        try:
+            reply = second_check_alert("Do you really want to delete note : " + self.notelist[self.record.currentRow()].note_title.decode('utf-8') + "?" )
+            if reply == QMessageBox.Yes :
+                self.notelist.pop(self.record.currentRow())
+                self.record.takeItem(self.record.currentRow())
+        except Exception , ex:
+            alert_box(str(ex))
 
     def clear_note(self):
         self.title.setText('')
@@ -217,13 +244,19 @@ class Easy_Note (Custom_Frame):
         except Exception , ex:
             alert_box(ex.message)
 
+    def second_check_onoff(self):
+        global ask_again_state
+        ask_again_state = self.ask_again.checkState()
+
 #For developer##################################################################
 
     def create_connect(self):
         #settings
         self.font_style.currentFontChanged.connect(self.set_font)
         self.font_size.valueChanged.connect(self.set_font)
+        self.ask_again.stateChanged.connect(self.second_check_onoff)
         #notes
+        self.replace.clicked.connect(self.replace_note)
         self.add.clicked.connect(self.add_note)
         self.load.clicked.connect(self.load_note)
         self.clear.clicked.connect(self.clear_note)
