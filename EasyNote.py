@@ -9,7 +9,7 @@ from PyQt4.QtWebKit import *
 
 #tools for developer############################################################
 
-ask_again_state = Qt.Checked
+ask_again_state = Qt.Checked #Checked for asking again and is checked by default
 
 def second_check_alert(message):
     reply = None
@@ -57,11 +57,12 @@ class Custom_Frame(QFrame):
 
     def custom_setting(self):
         p = self.palette()
-        p.setColor(self.backgroundRole(), QColor(255, 102, 102))
+        p.setColor(self.backgroundRole(), QColor(255, 128, 128)) #(R,G,B)
         self.setPalette(p)
 
         self.setStyleSheet(
             "QLabel {color:rgb(255,255,255)}" +
+            "QCheckBox {color:rgb(255,255,255)}" +
             "QPushButton {background-color: rgb(90, 0, 0); color:rgb(255,255,255)}" +
             "QListWidget{ background-color: rgb(150, 0, 0); color : rgb(255,255,255)}" +
             "QLineEdit { background-color: rgb(128, 0, 0); color : rgb(255,255,255)}"  +
@@ -126,7 +127,7 @@ class Easy_Note (Custom_Frame):
         column2.addWidget(self.load)
         column2.addWidget(self.delete)
         column2.addWidget(self.clear)
-        column2.addStretch(1)#add space
+        column2.addStretch(1)#add space between widgets
         column2.addWidget(self.replace)
         column2.addWidget(self.add)
 
