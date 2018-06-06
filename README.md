@@ -15,3 +15,7 @@ If you find any bug when using or you have any suggestions , please comment !
 Please check if your computer has Python 2.7 before using this application!
 
 To hide console window , change the .py file to .pyw file.
+
+# Sample
+
+![alt text](./sample.PNG)
